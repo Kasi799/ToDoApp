@@ -12,7 +12,7 @@ connectDB();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://grand-crepe-ee84c6.netlify.app"],
+    origin: ["http://localhost:5173", "https://taskassigntodoapp.netlify.app"],
     credentials: true,
   })
 );
