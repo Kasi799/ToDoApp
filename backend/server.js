@@ -17,7 +17,7 @@ app.use(express.json());
 //   })
 // );
 app.use(cors({
-  origin: "https://beautiful-platypus-ab63fb.netlify.app/",
+  origin: "https://beautiful-platypus-ab63fb.netlify.app",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
