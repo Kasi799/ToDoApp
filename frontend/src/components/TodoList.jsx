@@ -1,25 +1,35 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTasks, createTask, removeTask } from "../redux/reduxRoutes/taskRedux";
+import { logoutUser } from "../redux/reduxRoutes/authRedux"; 
+import { useNavigate } from "react-router-dom";
 import EditTask from "./EditTask";
 
 const TodoList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const tasks = useSelector((state) => state.tasks.list);
+  const user = useSelector((state) => state.auth.user); 
   const [newTask, setNewTask] = useState("");
   const [editTask, setEditTask] = useState(null);
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
+
   const handleAddTask = () => {
     if (!newTask.trim()) {
       alert("Task title cannot be empty");
       return;
     }
-  
-    dispatch(createTask({ title: newTask })); 
-    setNewTask(""); 
+    dispatch(createTask({ title: newTask }));
+    setNewTask("");
   };
+
+  const handleLogout = () => {
+    dispatch(logoutUser()); 
+    navigate("/"); 
+  };
+
   return (
     <div className="max-w-lg mx-auto mt-10 p-5 bg-white shadow-lg rounded">
       <h2 className="text-2xl font-bold text-center mb-4">To-Do List</h2>
@@ -38,6 +48,7 @@ const TodoList = () => {
           Add
         </button>
       </div>
+
       {tasks.map((task) => (
         <div
           key={task._id}
@@ -61,9 +72,16 @@ const TodoList = () => {
         </div>
       ))}
       {editTask && <EditTask task={editTask} onClose={() => setEditTask(null)} />}
+      {user && (
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-4 w-auto"
+        >
+          Logout
+        </button>
+      )}
     </div>
   );
 };
 
 export default TodoList;
-
