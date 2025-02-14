@@ -21,7 +21,7 @@ export const authReducer = (state = initialState, action) => {
 export const signup = (userData) => async () => {
   try {
     console.log("Signup request:", userData);
-    const response = await axios.post(`${API_BASE_URL}/signup`, userData); // ✅ Fixed syntax
+    const response = await axios.post(`${API_BASE_URL}/signup`, userData); 
     console.log("Signup successful:", response.data);
   } catch (error) {
     console.error("Signup failed:", error.response?.data || error.message);
@@ -31,13 +31,16 @@ export const signup = (userData) => async () => {
 export const signin = (userData) => async (dispatch) => {
   try {
     console.log("Sign-in request:", userData);
-    const response = await axios.post(`${API_BASE_URL}/signin`, userData); 
+    const response = await axios.post(`${API_BASE_URL}/signin`, userData);
     console.log("Sign-in successful:", response.data);
-    dispatch({ type: SET_USER, payload: response.data }); 
+    dispatch({ type: SET_USER, payload: response.data });
+    return { success: true, payload: response.data };
   } catch (error) {
     console.error("Sign-in failed:", error.response?.data || error.message);
+    return { success: false, message: error.response?.data?.message || "Signin failed" }; 
   }
 };
+
 
 export const logoutUser = () => (dispatch) => {
   dispatch({ type: LOGOUT });

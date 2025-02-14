@@ -12,9 +12,18 @@ const Signin = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(signin(formData));
-    navigate("/tasks");
+    try {
+      const response = await dispatch(signin(formData)); 
+      if (response && response.payload) {
+        navigate("/tasks"); 
+      } else {
+        alert("Invalid credentials, please try again!");
+      }
+    } catch (error) {
+      alert("Signin failed. Please check your email and password.");
+    }
   };
+  
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">

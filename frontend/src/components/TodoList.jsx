@@ -8,10 +8,14 @@ import EditTask from "./EditTask";
 const TodoList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
   const tasks = useSelector((state) => state.tasks.list);
   const user = useSelector((state) => state.auth.user); 
+  const loading = useSelector((state) => state.tasks.loading); 
+  
   const [newTask, setNewTask] = useState("");
   const [editTask, setEditTask] = useState(null);
+  
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
@@ -22,7 +26,7 @@ const TodoList = () => {
       return;
     }
     dispatch(createTask({ title: newTask }));
-    setNewTask("");
+    setNewTask(""); // Clear input after adding task
   };
 
   const handleLogout = () => {
@@ -49,29 +53,35 @@ const TodoList = () => {
         </button>
       </div>
 
-      {tasks.map((task) => (
-        <div
-          key={task._id}
-          className="flex justify-between items-center bg-gray-100 p-2 mb-2 rounded"
-        >
-          <span className="text-lg">{task.title}</span>
-          <div>
-            <button
-              onClick={() => setEditTask(task)}
-              className="bg-yellow-400 text-white px-3 py-1 rounded mr-2"
-            >
-              Edit
-            </button>
-            <button
-              onClick={() => dispatch(removeTask(task._id))}
-              className="bg-red-500 text-white px-3 py-1 rounded"
-            >
-              Delete
-            </button>
+      {loading ? ( // ✅ Show loading state
+        <div className="text-center">Loading tasks...</div>
+      ) : (
+        tasks.map((task) => (
+          <div
+            key={task._id}
+            className="flex justify-between items-center bg-gray-100 p-2 mb-2 rounded"
+          >
+            <span className="text-lg">{task.title}</span>
+            <div>
+              <button
+                onClick={() => setEditTask(task)}
+                className="bg-yellow-400 text-white px-3 py-1 rounded mr-2"
+              >
+                Edit
+              </button>
+              <button
+                onClick={() => dispatch(removeTask(task._id))}
+                className="bg-red-500 text-white px-3 py-1 rounded"
+              >
+                Delete
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      )}
+
       {editTask && <EditTask task={editTask} onClose={() => setEditTask(null)} />}
+
       {user && (
         <button
           onClick={handleLogout}
