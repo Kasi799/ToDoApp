@@ -10,18 +10,13 @@ const PORT = process.env.PORT || 5000;
 
 connectDB();
 app.use(express.json());
+
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://taskassigntodoapp.netlify.app"],
     credentials: true,
   })
 );
-// app.use(
-//   cors({
-//     origin: ["http://localhost:5173", "https://taskassigntodoapp.netlify.app"],
-//     credentials: true,
-//   })
-// );
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
