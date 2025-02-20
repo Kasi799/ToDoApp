@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// const API_BASE_URL = "https://todoapp-emlp.onrender.com/api/tasks";
+const API_BASE_URL = "https://todoapp-emlp.onrender.com/api/tasks";
 
-const API_BASE_URL = "http://localhost:5000/api/tasks";
+// const API_BASE_URL = "http://localhost:5000/api/tasks";
 
 const SET_TASKS = "SET_TASKS";
 const ADD_TASK = "ADD_TASK";
