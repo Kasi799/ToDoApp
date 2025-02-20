@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTasks, createTask, removeTask } from "../redux/reduxRoutes/taskRedux";
-import { logoutUser } from "../redux/reduxRoutes/authRedux"; 
+import { logoutUser } from "../redux/reduxRoutes/authRedux";
 import { useNavigate } from "react-router-dom";
 import EditTask from "./EditTask";
+import SubTask from "./SubTask"; 
 
 const TodoList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+  const [taskList, setTaskList] = useState([]);
   const tasks = useSelector((state) => state.tasks.list);
   const user = useSelector((state) => state.auth.user); 
   const loading = useSelector((state) => state.tasks.loading); 
-  
   const [newTask, setNewTask] = useState("");
   const [editTask, setEditTask] = useState(null);
   
@@ -20,13 +20,27 @@ const TodoList = () => {
     dispatch(fetchTasks());
   }, [dispatch]);
 
+  useEffect(() => {
+    setTaskList(tasks);
+  }, [tasks]);
+
   const handleAddTask = () => {
     if (!newTask.trim()) {
       alert("Task title cannot be empty");
       return;
     }
+    const newTaskObj = { _id: Date.now().toString(), title: newTask, subtasks: [] };
+    setTaskList([...taskList, newTaskObj]);
     dispatch(createTask({ title: newTask }));
-    setNewTask(""); // Clear input after adding task
+    setNewTask(""); 
+  };
+
+  const updateTaskState = (taskId, updatedSubtasks) => {
+    setTaskList((prevTasks) =>
+      prevTasks.map((task) =>
+        task._id === taskId ? { ...task, subtasks: updatedSubtasks } : task
+      )
+    );
   };
 
   const handleLogout = () => {
@@ -53,29 +67,32 @@ const TodoList = () => {
         </button>
       </div>
 
-      {loading ? ( // ✅ Show loading state
+      {loading ? ( 
         <div className="text-center">Loading tasks...</div>
       ) : (
-        tasks.map((task) => (
-          <div
-            key={task._id}
-            className="flex justify-between items-center bg-gray-100 p-2 mb-2 rounded"
-          >
-            <span className="text-lg">{task.title}</span>
-            <div>
-              <button
-                onClick={() => setEditTask(task)}
-                className="bg-yellow-400 text-white px-3 py-1 rounded mr-2"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => dispatch(removeTask(task._id))}
-                className="bg-red-500 text-white px-3 py-1 rounded"
-              >
-                Delete
-              </button>
-            </div>
+        taskList.map((task) => (
+          <div key={task._id} className="bg-gray-100 p-2 mb-2 rounded">
+            <div className="flex justify-between items-center">
+              <span className="text-lg font-semibold">{task.title}</span>
+              <div>
+                <button
+                  onClick={() => setEditTask(task)}
+                  className="bg-yellow-400 text-white px-3 py-1 rounded mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => {
+                    dispatch(removeTask(task._id));
+                    setTaskList(taskList.filter((t) => t._id !== task._id));
+                  }}
+                  className="bg-red-500 text-white px-3 py-1 rounded"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>            
+            <SubTask task={task} updateTaskState={updateTaskState} />
           </div>
         ))
       )}
