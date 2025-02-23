@@ -29,8 +29,7 @@ const SubTask = ({ task, updateTaskState }) => {
     setSubtasks(updatedSubtasks);
     updateTaskState(task._id, updatedSubtasks);
     try {
-      const response = await dispatch(createSubTask(task._id, { title: newSubTask }));
-      setNewSubTask("")
+      const response = await dispatch(createSubTask(task._id, { title: subtaskTitle }));
       if (response?.payload?._id) {
         setSubtasks((prevSubtasks) =>
           prevSubtasks.map((sub) =>
