@@ -21,8 +21,10 @@ const SubTask = ({ task, updateTaskState }) => {
       alert("Subtask title cannot be empty");
       return;
     }
+    const subtaskTitle = newSubTask;
+    setNewSubTask("");
     const tempId = Date.now().toString();
-    const newSub = { _id: tempId, title: newSubTask, completed: false };
+    const newSub = { _id: tempId, title: subtaskTitle, completed: false };
     const updatedSubtasks = [...subtasks, newSub];
     setSubtasks(updatedSubtasks);
     updateTaskState(task._id, updatedSubtasks);
@@ -39,7 +41,6 @@ const SubTask = ({ task, updateTaskState }) => {
     } catch (error) {
       console.error(" Error creating subtask:", error);
     }
-    setNewSubTask("");
   };
 
   const handleToggleComplete = (sub) => {
