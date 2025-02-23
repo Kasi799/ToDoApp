@@ -28,7 +28,7 @@ const SubTask = ({ task, updateTaskState }) => {
     updateTaskState(task._id, updatedSubtasks);
     try {
       const response = await dispatch(createSubTask(task._id, { title: newSubTask }));
-
+      setNewSubTask("")
       if (response?.payload?._id) {
         setSubtasks((prevSubtasks) =>
           prevSubtasks.map((sub) =>
@@ -39,7 +39,6 @@ const SubTask = ({ task, updateTaskState }) => {
     } catch (error) {
       console.error(" Error creating subtask:", error);
     }
-
     setNewSubTask("");
   };
 
@@ -72,14 +71,14 @@ const SubTask = ({ task, updateTaskState }) => {
                   {sub.title}
                 </span>
                 <div className="flex gap-2">
-                <button
+                {/* <button
                   onClick={() => handleToggleComplete(sub)}
                   className={`px-2 py-1 rounded cursor-not-allowed ${
                     sub.completed ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 text-white"
                   }`}
                 >
                   {sub.completed ? "Open" : "Open"}
-                </button>
+                </button> */}
                 <button
                   onClick={() => handleToggleComplete(sub)}
                   className={`px-2 py-1 rounded ${
